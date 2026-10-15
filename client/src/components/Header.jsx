@@ -55,12 +55,12 @@ const Header = () => {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${!isTransparent ? 'bg-white/80 backdrop-blur-md border-b border-outline-variant/10 h-20' : 'bg-transparent h-20'}`}>
-        <nav className="container mx-auto px-6 md:px-16 h-full flex items-center justify-between">
+      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${!isTransparent ? 'bg-white/90 backdrop-blur-md border-b border-outline-variant/15 h-20 shadow-xs' : 'bg-transparent h-20'}`}>
+        <nav className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-full flex items-center justify-between">
           {/* Logo (Left) */}
-          <Link to="/" className="flex items-center gap-3 md:gap-4 group">
+          <Link to="/" className="flex items-center gap-3 md:gap-3.5 group shrink-0">
             {/* Logo Graphic (cropped from top) */}
-            <div className="relative overflow-hidden w-12 h-10 md:w-16 md:h-12 flex items-start justify-center">
+            <div className="relative overflow-hidden w-11 h-9 md:w-14 md:h-11 flex items-start justify-center">
               <img
                 src={etcLogo}
                 alt="ETC Graphic"
@@ -70,68 +70,72 @@ const Header = () => {
 
             {/* Logo Text */}
             <div className="flex flex-col justify-center">
-              <span className={`font-headline text-lg md:text-[15px] font-black tracking-widest leading-none transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`}>
+              <span className={`font-headline text-base md:text-[15px] font-black tracking-wider leading-none transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`}>
                 ETC APPAREL LIMITED
               </span>
-              <span className={`font-label text-[5.5px] md:text-[7.5px] uppercase tracking-[0.25em] mt-1.5 font-bold transition-colors duration-300 ${isTransparent ? 'text-white/80' : 'text-on-surface-variant'}`}>
+              <span className={`font-label text-[7px] md:text-[8px] uppercase tracking-[0.2em] mt-1 font-bold transition-colors duration-300 ${isTransparent ? 'text-white/80' : 'text-on-surface-variant'}`}>
                 UK BANGLADESH VENTURE
               </span>
             </div>
           </Link>
 
           {/* Navigation Links (Center) */}
-          <div className="hidden lg:flex items-center gap-5 xl:gap-7 2xl:gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`relative py-1 font-label text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] uppercase tracking-[0.15em] xl:tracking-[0.2em] transition-all hover:text-secondary group ${location.pathname === link.path
-                  ? 'text-secondary font-bold'
-                  : (isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant')
-                  }`}
-              >
-                {link.name}
-                <span className={`absolute bottom-0 left-0 w-full h-[1px] transition-transform duration-300 origin-left ${location.pathname === link.path
-                  ? 'bg-secondary scale-x-100'
-                  : (isTransparent ? 'bg-white scale-x-0 group-hover:scale-x-100' : 'bg-secondary scale-x-0 group-hover:scale-x-100')
-                  }`}></span>
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center justify-center flex-1 mx-4 xl:mx-8 2xl:mx-12">
+            <div className="flex items-center gap-3.5 lg:gap-4 xl:gap-6 2xl:gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`relative py-1 font-label text-[12px] xl:text-[13px] 2xl:text-[13.5px] uppercase tracking-[0.08em] xl:tracking-[0.12em] whitespace-nowrap transition-colors hover:text-secondary group ${location.pathname === link.path
+                    ? 'text-secondary font-bold'
+                    : (isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant')
+                    }`}
+                >
+                  {link.name}
+                  <span className={`absolute bottom-0 left-0 w-full h-[1.5px] transition-transform duration-300 origin-left ${location.pathname === link.path
+                    ? 'bg-secondary scale-x-100'
+                    : (isTransparent ? 'bg-white scale-x-0 group-hover:scale-x-100' : 'bg-secondary scale-x-0 group-hover:scale-x-100')
+                    }`}></span>
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Actions (Right) */}
-          <div className="flex items-center gap-4 md:gap-8">
-            <div className="hidden md:flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-5 shrink-0">
+            <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
                   {isAdmin && (
-                    <Link to="/admin" className={`font-label text-[10px] uppercase tracking-[0.3em] font-bold transition-all ${isTransparent ? 'text-secondary-fixed-dim hover:text-white' : 'text-secondary hover:text-primary'}`}>Admin Panel</Link>
+                    <Link to="/admin" className={`font-label text-[10px] uppercase tracking-widest font-bold transition-all ${isTransparent ? 'text-secondary-fixed-dim hover:text-white' : 'text-secondary hover:text-primary'}`}>Admin</Link>
                   )}
-                  <Link to="/profile" className={`font-label text-[10px] uppercase tracking-[0.3em] transition-all ${isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant hover:text-secondary'}`}>
+                  <Link to="/profile" className={`font-label text-[11px] uppercase tracking-wider transition-all font-semibold ${isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant hover:text-secondary'}`}>
                     {user.name.split(' ')[0]}
                   </Link>
-                  <button onClick={logout} className="editorial-gradient text-on-primary px-6 py-3 rounded-DEFAULT font-label text-[10px] uppercase tracking-widest shadow-sm hover:opacity-90 transition-all">
+                  <button onClick={logout} className="editorial-gradient text-on-primary px-4 py-1.5 rounded-full font-label text-[10px] uppercase tracking-widest shadow-xs hover:opacity-90 transition-all font-bold">
                     Sign Out
                   </button>
                 </>
               ) : (
-                <>
-                  <Link to="/login" className={`font-label text-[10px] uppercase tracking-[0.3em] transition-all ${isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant hover:text-secondary'}`}>Sign In</Link>
-                  <Link to="/register" className="editorial-gradient text-on-primary px-6 py-3 rounded-DEFAULT font-label text-[10px] uppercase tracking-widest shadow-sm hover:opacity-90 transition-all">Join Atelier</Link>
-                </>
+                <Link 
+                  to="/login" 
+                  className={`px-4 py-1.5 rounded-full font-label text-[11px] uppercase tracking-wider font-bold transition-all ${isTransparent ? 'bg-white/10 hover:bg-white/20 text-white border border-white/25' : 'bg-surface-container hover:bg-secondary hover:text-white text-primary border border-outline-variant/30 shadow-2xs'}`}
+                >
+                  Sign In
+                </Link>
               )}
             </div>
 
-            <button onClick={() => setIsCartOpen(true)} className="relative group">
-              <ShoppingBag className={`w-6 h-6 transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`} />
+            <button onClick={() => setIsCartOpen(true)} className="relative p-1.5 hover:bg-surface-container/60 rounded-full transition-colors group">
+              <ShoppingBag className={`w-5 h-5 transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`} />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-4 h-4 bg-secondary text-on-secondary text-[8px] flex items-center justify-center rounded-full font-bold">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary text-on-secondary text-[8px] flex items-center justify-center rounded-full font-bold">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            <button onClick={() => setIsMobileMenuOpen(true)} className={`lg:hidden p-2 transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`}>
+            <button onClick={() => setIsMobileMenuOpen(true)} className={`lg:hidden p-2 rounded-lg hover:bg-surface-container/50 transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`}>
               <Menu className="w-6 h-6" />
             </button>
           </div>
@@ -179,10 +183,7 @@ const Header = () => {
                   <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="w-full py-4 text-center bg-primary text-white font-label text-xs uppercase tracking-widest font-bold">Sign Out</button>
                 </>
               ) : (
-                <>
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-4 text-center border border-primary text-primary font-label text-xs uppercase tracking-widest font-bold">Sign In</Link>
-                  <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-4 text-center bg-primary text-white font-label text-xs uppercase tracking-widest font-bold">Join Atelier</Link>
-                </>
+                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-4 text-center bg-primary text-white font-label text-xs uppercase tracking-widest font-bold">Sign In</Link>
               )}
             </div>
           </motion.div>
