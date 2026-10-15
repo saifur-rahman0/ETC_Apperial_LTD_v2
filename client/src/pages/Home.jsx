@@ -5,6 +5,52 @@ import { ArrowRight, ChevronRight, Quote, Mail } from 'lucide-react';
 import { productCategories } from '../data/products';
 import api from '../utils/api';
 
+const slides = [
+  {
+    title: "Refining the Modern Silhouette.",
+    subtitle: "",
+    description: "An editorial journey through textile innovation and architectural tailoring. Crafted for the global curator who values silence over noise.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFEUfiXKuCs4XIVo0ZQLi6YKTn-LDS_pkNruKhP5Yu_z-xwGT56CMFcYORqNjT_wz58pWmEDLTrxxElMDqmcqc3kDFtUVau1OmhrQOXI-hx4yLP19U1p3RZKtyIVO3WrexQNvEUDoZZeL9dAFBD64Gc8dbBUKTlFtiK58BPQwOQAH_18c--J4gQOyMOe2kfhPrtsRuiLlXXP0lAtnjgdsCKQvhlZlwcMcaBTf_sMNCQiBwlEWiBRSTHCnt4dAt7QgFeeC10Mh-fDpW",
+    italicPart: "Modern Silhouette."
+  },
+  {
+    title: "Architectural Brutalist Detail.",
+    subtitle: "",
+    description: "A dialogue between structure and fluidity. Exploring the intersection of brutalist aesthetics and garment construction.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAt7h06E9qDUKq9xalBzao-1lZAZNK0Kgu6VLGnKxCrlE2miNi7oxtpqkdB1nfaq8fDtpO-pehlLFpuYfIfBhm5rivJG1pc1mF-41PW3MFht7dlJSjjQ_cmHU42-yISdMPkogdjhQ1Dlm-7um0fZAeWU5JbT-FdGX_O47dG2pjLBDtSIm3VNWTBTtwXy3FdZW8FtmPKz6WU8s38_vmeEohAtFUWi6j9YyYhW_A0I5lhiyAi32Fp2Q_Sw15zaWBYL6Cn7AJQaTKbCaBR",
+    italicPart: "Brutalist Detail."
+  },
+  {
+    title: "High Fashion Narrative.",
+    subtitle: "",
+    description: "Tactile memories preserved in fiber. A curation of pieces that endure beyond the cycle of seasons.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD9WlH5JDUbxluGtsNw7Wosolq2H6v3BjMkVFZLJrKMV8oN0qS-NwjOYkopQySW5YLR-tVM73gN-G4CIcfzacPboZwyiSxACV2yGnLGliyFwld5Fx5PySZgl63uIK0AQctFx_-ZwL29zBjPT9T7Oma6Nei095hXsqM5uD53j-kapSSG7lxNDuZzLPLI-qVd9KDMXQYfIiR0-1zG4H2beMwS4hX9fRzXOy6LHMldJPr0mSwtzM7w28GwByETfTItwWpB4BkRgGV9G-LA",
+    italicPart: "Narrative."
+  },
+  {
+    title: "Quality, We Never Compromise.",
+    subtitle: "",
+    description: "Every thread, every seam, every finish — held to the highest standard. Because our youngest customers deserve nothing less than perfection.",
+    image: "https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?q=80&w=1600&auto=format&fit=crop",
+    italicPart: "We Never Compromise."
+  }
+];
+
+const testimonials = [
+  {
+    quote: "ETC Apparel doesn't just sell clothing; they offer a perspective on how to move through the world with grace. The tactile quality of their wool trousers is simply unmatched.",
+    author: "Julian Vane, Creative Director"
+  },
+  {
+    quote: "From the stitching to the silhouette, every piece tells a story of mastery. ETC Apparel is where fashion meets quiet excellence.",
+    author: "Amara Nwosu, Style Editor"
+  },
+  {
+    quote: "Wearing ETC is a statement of intentionality. The craftsmanship transcends trends — these are garments you pass down.",
+    author: "Soren Kjelberg, Architect"
+  }
+];
+
 const Home = () => {
   const [news, setNews] = useState([]);
   const [dbProducts, setDbProducts] = useState([]);
@@ -12,45 +58,6 @@ const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
-
-  const slides = [
-    {
-      title: "Refining the Modern Silhouette.",
-      subtitle: "Collection 2024",
-      description: "An editorial journey through textile innovation and architectural tailoring. Crafted for the global curator who values silence over noise.",
-      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFEUfiXKuCs4XIVo0ZQLi6YKTn-LDS_pkNruKhP5Yu_z-xwGT56CMFcYORqNjT_wz58pWmEDLTrxxElMDqmcqc3kDFtUVau1OmhrQOXI-hx4yLP19U1p3RZKtyIVO3WrexQNvEUDoZZeL9dAFBD64Gc8dbBUKTlFtiK58BPQwOQAH_18c--J4gQOyMOe2kfhPrtsRuiLlXXP0lAtnjgdsCKQvhlZlwcMcaBTf_sMNCQiBwlEWiBRSTHCnt4dAt7QgFeeC10Mh-fDpW",
-      italicPart: "Modern Silhouette."
-    },
-    {
-      title: "Architectural Brutalist Detail.",
-      subtitle: "Editorial Series",
-      description: "A dialogue between structure and fluidity. Exploring the intersection of brutalist aesthetics and garment construction.",
-      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAt7h06E9qDUKq9xalBzao-1lZAZNK0Kgu6VLGnKxCrlE2miNi7oxtpqkdB1nfaq8fDtpO-pehlLFpuYfIfBhm5rivJG1pc1mF-41PW3MFht7dlJSjjQ_cmHU42-yISdMPkogdjhQ1Dlm-7um0fZAeWU5JbT-FdGX_O47dG2pjLBDtSIm3VNWTBTtwXy3FdZW8FtmPKz6WU8s38_vmeEohAtFUWi6j9YyYhW_A0I5lhiyAi32Fp2Q_Sw15zaWBYL6Cn7AJQaTKbCaBR",
-      italicPart: "Brutalist Detail."
-    },
-    {
-      title: "High Fashion Narrative.",
-      subtitle: "Archival Drops",
-      description: "Tactile memories preserved in fiber. A curation of pieces that endure beyond the cycle of seasons.",
-      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD9WlH5JDUbxluGtsNw7Wosolq2H6v3BjMkVFZLJrKMV8oN0qS-NwjOYkopQySW5YLR-tVM73gN-G4CIcfzacPboZwyiSxACV2yGnLGliyFwld5Fx5PySZgl63uIK0AQctFx_-ZwL29zBjPT9T7Oma6Nei095hXsqM5uD53j-kapSSG7lxNDuZzLPLI-qVd9KDMXQYfIiR0-1zG4H2beMwS4hX9fRzXOy6LHMldJPr0mSwtzM7w28GwByETfTItwWpB4BkRgGV9G-LA",
-      italicPart: "Narrative."
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "ETC Apparel doesn't just sell clothing; they offer a perspective on how to move through the world with grace. The tactile quality of their wool trousers is simply unmatched.",
-      author: "Julian Vane, Creative Director"
-    },
-    {
-      quote: "From the stitching to the silhouette, every piece tells a story of mastery. ETC Apparel is where fashion meets quiet excellence.",
-      author: "Amara Nwosu, Style Editor"
-    },
-    {
-      quote: "Wearing ETC is a statement of intentionality. The craftsmanship transcends trends — these are garments you pass down.",
-      author: "Soren Kjelberg, Architect"
-    }
-  ];
 
   useEffect(() => {
     const fetchLatestNews = async () => {
@@ -72,20 +79,23 @@ const Home = () => {
 
     fetchLatestNews();
     fetchProducts();
+  }, []);
 
+  useEffect(() => {
     const slideTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
 
+    return () => clearInterval(slideTimer);
+  }, [currentSlide]);
+
+  useEffect(() => {
     const testimonialTimer = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
 
-    return () => {
-      clearInterval(slideTimer);
-      clearInterval(testimonialTimer);
-    };
-  }, []);
+    return () => clearInterval(testimonialTimer);
+  }, [currentTestimonial]);
 
   const activeCategories = useMemo(() => {
     if (!dbProducts || dbProducts.length === 0) {
@@ -136,20 +146,26 @@ const Home = () => {
     }
   };
 
+  const activeSlideIndex = ((currentSlide % slides.length) + slides.length) % slides.length;
+  const activeSlide = slides[activeSlideIndex];
+
+  const activeTestimonialIndex = ((currentTestimonial % testimonials.length) + testimonials.length) % testimonials.length;
+  const activeTestimonial = testimonials[activeTestimonialIndex];
+
   return (
     <main className="relative selection:bg-secondary-fixed selection:text-on-secondary-fixed">
       {/* Hero Section */}
       <section className="h-screen w-full relative overflow-hidden bg-primary">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentSlide}
+            key={activeSlideIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
             className="absolute inset-0"
           >
-            <img src={slides[currentSlide].image} className="w-full h-full object-cover grayscale-[20%]" alt="Hero" />
+            <img src={activeSlide.image} className="w-full h-full object-cover grayscale-[20%]" alt="Hero" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/60 to-transparent z-20"></div>
             <div className="absolute inset-0 noise-texture opacity-30 z-20"></div>
           </motion.div>
@@ -157,32 +173,34 @@ const Home = () => {
 
         <div className="container mx-auto px-8 md:px-16 grid grid-cols-1 md:grid-cols-12 h-full items-center z-30 relative pointer-events-none">
           <div className="md:col-span-7 pointer-events-auto">
-            <motion.span
-              key={`subtitle-${currentSlide}`}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-secondary tracking-[0.4em] text-xs uppercase font-label mb-6 block"
-            >
-              {slides[currentSlide].subtitle}
-            </motion.span>
+            {activeSlide.subtitle && (
+              <motion.span
+                key={`subtitle-${activeSlideIndex}`}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-secondary tracking-[0.4em] text-xs uppercase font-label mb-6 block"
+              >
+                {activeSlide.subtitle}
+              </motion.span>
+            )}
             <motion.h1
-              key={`title-${currentSlide}`}
+              key={`title-${activeSlideIndex}`}
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-white font-headline text-4xl sm:text-6xl md:text-8xl font-black leading-[1.1] mb-8 tracking-tighter"
             >
-              {slides[currentSlide].title.replace(slides[currentSlide].italicPart, '')}
-              <span className="italic text-surface-container-high font-medium">{slides[currentSlide].italicPart}</span>
+              {activeSlide.title.replace(activeSlide.italicPart, '')}
+              <span className="italic text-surface-container-high font-medium">{activeSlide.italicPart}</span>
             </motion.h1>
             <motion.p
-              key={`desc-${currentSlide}`}
+              key={`desc-${activeSlideIndex}`}
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
               className="text-on-primary-container font-body text-lg max-w-md mb-12 leading-relaxed"
             >
-              {slides[currentSlide].description}
+              {activeSlide.description}
             </motion.p>
             <motion.div
               initial={{ y: 30, opacity: 0 }}
@@ -209,7 +227,7 @@ const Home = () => {
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className={`w-12 h-1 transition-all ${currentSlide === i ? 'bg-white' : 'bg-white/20 hover:bg-white/40'}`}
+              className={`w-12 h-1 transition-all ${activeSlideIndex === i ? 'bg-white' : 'bg-white/20 hover:bg-white/40'}`}
             />
           ))}
         </div>
@@ -377,17 +395,17 @@ const Home = () => {
           <div className="relative h-64 md:h-48">
             <AnimatePresence mode="wait">
               <motion.div
-                key={currentTestimonial}
+                key={activeTestimonialIndex}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="absolute inset-0"
               >
                 <blockquote className="font-headline text-3xl md:text-4xl text-primary italic leading-relaxed mb-8">
-                  "{testimonials[currentTestimonial].quote}"
+                  "{activeTestimonial.quote}"
                 </blockquote>
                 <cite className="not-italic font-label uppercase tracking-widest text-sm text-secondary font-bold">
-                  {testimonials[currentTestimonial].author}
+                  {activeTestimonial.author}
                 </cite>
               </motion.div>
             </AnimatePresence>
@@ -398,7 +416,7 @@ const Home = () => {
               <button
                 key={i}
                 onClick={() => setCurrentTestimonial(i)}
-                className={`w-2 h-2 rounded-full transition-all ${currentTestimonial === i ? 'bg-secondary w-6' : 'bg-outline-variant hover:bg-secondary'}`}
+                className={`w-2 h-2 rounded-full transition-all ${activeTestimonialIndex === i ? 'bg-secondary w-6' : 'bg-outline-variant hover:bg-secondary'}`}
               />
             ))}
           </div>

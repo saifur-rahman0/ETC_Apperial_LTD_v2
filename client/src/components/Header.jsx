@@ -71,10 +71,10 @@ const Header = () => {
             {/* Logo Text */}
             <div className="flex flex-col justify-center">
               <span className={`font-headline text-lg md:text-[15px] font-black tracking-widest leading-none transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-primary'}`}>
-                ETC APPAREL
+                ETC APPAREL LIMITED
               </span>
               <span className={`font-label text-[5.5px] md:text-[7.5px] uppercase tracking-[0.25em] mt-1.5 font-bold transition-colors duration-300 ${isTransparent ? 'text-white/80' : 'text-on-surface-variant'}`}>
-                UK Bangladesh Venture
+                Build to Build your clothing business
               </span>
             </div>
           </Link>
