@@ -27,42 +27,6 @@ import {
   BadgeCheck
 } from 'lucide-react';
 
-// Reusable Visual Understanding Section Divider
-const SectionDivider = ({ number, title, icon: Icon, tag }) => {
-  return (
-    <div className="relative py-12 md:py-16 px-4 flex items-center justify-center overflow-hidden">
-      {/* Background Accent Lines */}
-      <div className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent" />
-      
-      {/* Center Visual Badge */}
-      <motion.div 
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 bg-surface px-5 sm:px-8 py-2.5 rounded-full border border-outline-variant/30 shadow-sm flex items-center gap-2.5 sm:gap-3"
-      >
-        <div className="w-6 h-6 rounded-full bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
-          <Icon className="w-3.5 h-3.5" />
-        </div>
-        <div className="flex items-center gap-2 text-left">
-          <span className="font-label text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-secondary">
-            {number}
-          </span>
-          <span className="w-1 h-1 rounded-full bg-outline-variant" />
-          <span className="font-label text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            {title}
-          </span>
-        </div>
-        {tag && (
-          <span className="hidden md:inline-block ml-1 px-2 py-0.5 rounded text-[9px] font-label font-bold uppercase tracking-widest bg-surface-container text-on-surface-variant/70 border border-outline-variant/20">
-            {tag}
-          </span>
-        )}
-      </motion.div>
-    </div>
-  );
-};
 
 const Sustainability = () => {
   const [activePillar, setActivePillar] = useState(0);
@@ -429,14 +393,6 @@ const Sustainability = () => {
         </div>
       </section>
 
-      {/* Visual Divider: Section 01 */}
-      <SectionDivider 
-        number="01 // FRAMEWORK" 
-        title="Six Sustainability Pillars" 
-        icon={Layers} 
-        tag="Auto-Cycling Explorer" 
-      />
-
       {/* 2. Interactive Pillars Explorer (With Automatic Loop) */}
       <section id="six-pillars" className="px-5 sm:px-8 md:px-16 lg:px-24 py-12 md:py-16 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -638,14 +594,6 @@ const Sustainability = () => {
         </div>
       </section>
 
-      {/* Visual Divider: Section 02 */}
-      <SectionDivider 
-        number="02 // ACCREDITATIONS" 
-        title="Global Compliance Codes" 
-        icon={ShieldCheck} 
-        tag="Tier-1 Audited" 
-      />
-
       {/* 3. Global Compliance & Certifications Showcase */}
       <section className="bg-white py-14 sm:py-20 md:py-24 px-5 sm:px-8 md:px-16 lg:px-24 border-y border-outline-variant/15">
         <div className="max-w-7xl mx-auto">
@@ -701,14 +649,6 @@ const Sustainability = () => {
           </div>
         </div>
       </section>
-
-      {/* Visual Divider: Section 03 */}
-      <SectionDivider 
-        number="03 // METRICS" 
-        title="Impact Comparison Matrix" 
-        icon={TrendingDown} 
-        tag="Resource Efficiency" 
-      />
 
       {/* 4. Comparative Impact Matrix (Responsive for Mobile Cards + Desktop Table) */}
       <section className="px-5 sm:px-8 md:px-16 lg:px-24 py-12 md:py-18 max-w-7xl mx-auto">
@@ -804,14 +744,6 @@ const Sustainability = () => {
         </div>
       </section>
 
-      {/* Visual Divider: Section 04 */}
-      <SectionDivider 
-        number="04 // HUMAN DIGNITY" 
-        title="Worker Welfare & Community" 
-        icon={HeartHandshake} 
-        tag="Social Governance" 
-      />
-
       {/* 5. Worker Welfare & Community Spotlight */}
       <section className="bg-primary text-white py-16 sm:py-20 md:py-28 px-5 sm:px-8 md:px-16 lg:px-24 relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-secondary/10 blur-3xl pointer-events-none" />
@@ -894,14 +826,6 @@ const Sustainability = () => {
           </div>
         </div>
       </section>
-
-      {/* Visual Divider: Section 05 */}
-      <SectionDivider 
-        number="05 // NEXT STEPS" 
-        title="Sourcing Engagement" 
-        icon={ArrowRight} 
-        tag="UK-BD Network" 
-      />
 
       {/* 6. Call to Action */}
       <section className="px-5 sm:px-8 md:px-16 lg:px-24 py-16 md:py-20 max-w-7xl mx-auto text-center">
