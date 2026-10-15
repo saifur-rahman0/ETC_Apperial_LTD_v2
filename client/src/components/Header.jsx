@@ -45,12 +45,12 @@ const Header = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
+    { name: 'Sustainability', path: '/sustainability' },
     { name: 'Partners', path: '/partners' },
     { name: 'Management', path: '/management' },
     { name: 'Contact', path: '/contact' },
     { name: 'News', path: '/news' },
     { name: 'Shop', path: '/shop' }
-
   ];
 
   return (
@@ -74,18 +74,18 @@ const Header = () => {
                 ETC APPAREL LIMITED
               </span>
               <span className={`font-label text-[5.5px] md:text-[7.5px] uppercase tracking-[0.25em] mt-1.5 font-bold transition-colors duration-300 ${isTransparent ? 'text-white/80' : 'text-on-surface-variant'}`}>
-                Build to Build your clothing business
+                UK BANGLADESH VENTURE
               </span>
             </div>
           </Link>
 
           {/* Navigation Links (Center) */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-7 2xl:gap-8">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative py-1 font-label text-[15px] uppercase tracking-[0.2em] transition-all hover:text-secondary group ${location.pathname === link.path
+                className={`relative py-1 font-label text-[13.5px] xl:text-[14.5px] 2xl:text-[15px] uppercase tracking-[0.15em] xl:tracking-[0.2em] transition-all hover:text-secondary group ${location.pathname === link.path
                   ? 'text-secondary font-bold'
                   : (isTransparent ? 'text-white/80 hover:text-white' : 'text-on-surface-variant')
                   }`}
