@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -16,13 +16,57 @@ import {
   HeartHandshake, 
   Layers,
   ChevronRight,
+  ChevronLeft,
   TrendingDown,
   Globe2,
-  FileCheck
+  FileCheck,
+  Pause,
+  Play,
+  Compass,
+  Zap,
+  BadgeCheck
 } from 'lucide-react';
+
+// Reusable Visual Understanding Section Divider
+const SectionDivider = ({ number, title, icon: Icon, tag }) => {
+  return (
+    <div className="relative py-12 md:py-16 px-4 flex items-center justify-center overflow-hidden">
+      {/* Background Accent Lines */}
+      <div className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent" />
+      
+      {/* Center Visual Badge */}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 bg-surface px-5 sm:px-8 py-2.5 rounded-full border border-outline-variant/30 shadow-sm flex items-center gap-2.5 sm:gap-3"
+      >
+        <div className="w-6 h-6 rounded-full bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
+          <Icon className="w-3.5 h-3.5" />
+        </div>
+        <div className="flex items-center gap-2 text-left">
+          <span className="font-label text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-secondary">
+            {number}
+          </span>
+          <span className="w-1 h-1 rounded-full bg-outline-variant" />
+          <span className="font-label text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            {title}
+          </span>
+        </div>
+        {tag && (
+          <span className="hidden md:inline-block ml-1 px-2 py-0.5 rounded text-[9px] font-label font-bold uppercase tracking-widest bg-surface-container text-on-surface-variant/70 border border-outline-variant/20">
+            {tag}
+          </span>
+        )}
+      </motion.div>
+    </div>
+  );
+};
 
 const Sustainability = () => {
   const [activePillar, setActivePillar] = useState(0);
+  const [isAutoLoopPaused, setIsAutoLoopPaused] = useState(false);
 
   // Key metrics counter / highlight stats
   const metrics = [
@@ -156,6 +200,23 @@ const Sustainability = () => {
     }
   ];
 
+  // Auto-looping 6 Pillars effect (5.5s interval)
+  useEffect(() => {
+    if (isAutoLoopPaused) return;
+    const interval = setInterval(() => {
+      setActivePillar((prev) => (prev + 1) % pillars.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [isAutoLoopPaused, pillars.length]);
+
+  const handleNextPillar = () => {
+    setActivePillar((prev) => (prev + 1) % pillars.length);
+  };
+
+  const handlePrevPillar = () => {
+    setActivePillar((prev) => (prev - 1 + pillars.length) % pillars.length);
+  };
+
   // Certifications list with visual badges
   const certifications = [
     {
@@ -243,60 +304,123 @@ const Sustainability = () => {
   ];
 
   return (
-    <main className="pt-24 bg-surface noise-bg min-h-screen text-on-surface">
-      {/* 1. Hero Section */}
-      <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-24 border-b border-outline-variant/15 overflow-hidden">
-        {/* Subtle decorative background glows */}
-        <div className="absolute top-12 right-12 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+    <main className="pt-20 md:pt-24 bg-surface noise-bg min-h-screen text-on-surface">
+      {/* 1. Hero Section With One-Sided Background Image */}
+      <section className="relative px-5 sm:px-8 md:px-16 lg:px-24 py-14 sm:py-18 md:py-24 border-b border-outline-variant/15 overflow-hidden">
+        {/* ONE-SIDED BACKGROUND IMAGE (Right Side on Desktop, Top/Ambient on Mobile) */}
+        <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[48%] pointer-events-none select-none overflow-hidden z-0">
+          <img
+            src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1400"
+            alt="Sustainable Organic Textile Raw Cotton"
+            className="w-full h-full object-cover object-center lg:object-left opacity-30 lg:opacity-75 transform scale-105"
+          />
+          {/* Subtle directional gradient blending image seamlessly into the surface */}
+          <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/85 lg:via-surface/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-surface/40 lg:to-transparent" />
+        </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-center max-w-4xl mx-auto mb-16"
-          >
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 mb-6">
-              <Leaf className="w-3.5 h-3.5 text-secondary" />
-              <span className="font-label text-[11px] uppercase tracking-[0.25em] text-secondary font-bold">
-                Ethical & Sustainable Apparel Sourcing
-              </span>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Content Column */}
+            <motion.div
+              initial={{ opacity: 0, x: -25 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-7 text-left"
+            >
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-secondary/10 border border-secondary/25 mb-6">
+                <Leaf className="w-3.5 h-3.5 text-secondary animate-pulse" />
+                <span className="font-label text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-secondary font-bold">
+                  UK-Bangladesh Sourcing Stewardship
+                </span>
+              </div>
 
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-primary leading-[1.08] tracking-tight mb-8">
-              Pioneering Responsible Textile Sourcing from <span className="italic font-normal text-secondary">Fiber to Fashion.</span>
-            </h1>
+              {/* Title with Requested Headline */}
+              <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-primary leading-[1.12] tracking-tight mb-6">
+                Pioneering Responsible Textile Sourcing from <span className="italic font-normal text-secondary">Fiber to Fashion.</span>
+              </h1>
 
-            <p className="font-body text-base md:text-xl text-on-surface-variant leading-relaxed max-w-3xl mx-auto">
-              ETC Apparel Ltd leads with conscience. Operating as a premier UK-Bangladesh buying house, we unite global retail standards with ethical factory environments, circular materials, and cutting-edge water-saving technologies.
-            </p>
-          </motion.div>
+              <p className="font-body text-sm sm:text-base md:text-lg text-on-surface-variant leading-relaxed max-w-2xl mb-8">
+                ETC Apparel Ltd leads with conscience. Operating as a premier UK-Bangladesh buying house, we unite global retail standards with ethical factory environments, circular materials, and cutting-edge water-saving technologies.
+              </p>
 
-          {/* Key Metrics Grid */}
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3.5 mb-10">
+                <Link
+                  to="/contact"
+                  className="editorial-gradient text-on-primary px-7 py-3.5 rounded font-label text-xs uppercase tracking-[0.2em] font-bold shadow-md hover:opacity-90 transition-all inline-flex items-center gap-2"
+                >
+                  Consult Sourcing Team
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <a
+                  href="#six-pillars"
+                  className="bg-white/80 backdrop-blur-sm border border-outline-variant text-primary px-6 py-3.5 rounded font-label text-xs uppercase tracking-[0.2em] font-bold hover:bg-surface-container transition-all"
+                >
+                  Explore 6 Pillars
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Right Card / Visual Complement */}
+            <motion.div
+              initial={{ opacity: 0, x: 25 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-5 relative"
+            >
+              <div className="bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/60 shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-6 opacity-10">
+                  <Globe2 className="w-32 h-32 text-primary" />
+                </div>
+                <div className="flex items-center gap-2 text-secondary mb-3">
+                  <BadgeCheck className="w-5 h-5" />
+                  <span className="font-label text-[11px] uppercase tracking-widest font-bold">
+                    Direct Factory Oversight
+                  </span>
+                </div>
+                <h3 className="font-headline text-xl sm:text-2xl font-bold text-primary mb-3">
+                  Zero Compromise on Worker Dignity & Environmental Safety.
+                </h3>
+                <p className="font-body text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-5">
+                  Stationed permanently between London design desks and Dhaka manufacturing floors, our on-ground compliance engineers audit structural safety, effluent treatment, and living wage frameworks in real time.
+                </p>
+                <div className="pt-4 border-t border-outline-variant/15 flex items-center justify-between">
+                  <span className="font-label text-[10px] uppercase tracking-widest text-secondary font-bold">
+                    Tier-1 Verification Standard
+                  </span>
+                  <span className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-label text-[10px] font-bold">
+                    Active & Audited
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Key Metrics Grid (Mobile optimized 2x2 or 4-col) */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 mt-12 md:mt-16"
           >
             {metrics.map((item, idx) => (
               <div 
                 key={idx}
-                className="bg-white/80 backdrop-blur-sm p-8 rounded-xl border border-outline-variant/20 shadow-sm hover:shadow-md hover:border-secondary/30 transition-all group"
+                className="bg-white/85 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border border-outline-variant/20 shadow-sm hover:shadow-md hover:border-secondary/30 transition-all group"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-headline text-3xl md:text-4xl font-black text-primary group-hover:text-secondary transition-colors">
+                <div className="flex items-center justify-between mb-2.5 sm:mb-4">
+                  <span className="font-headline text-2xl sm:text-3xl md:text-4xl font-black text-primary group-hover:text-secondary transition-colors">
                     {item.value}
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                 </div>
-                <h3 className="font-label text-sm uppercase tracking-wider font-bold text-primary mb-1">
+                <h3 className="font-label text-[11px] sm:text-xs md:text-sm uppercase tracking-wider font-bold text-primary mb-1 line-clamp-1">
                   {item.label}
                 </h3>
-                <p className="font-body text-xs text-on-surface-variant/80 leading-relaxed">
+                <p className="font-body text-[10px] sm:text-xs text-on-surface-variant/80 leading-relaxed hidden sm:block">
                   {item.subtext}
                 </p>
               </div>
@@ -305,46 +429,97 @@ const Sustainability = () => {
         </div>
       </section>
 
-      {/* 2. Interactive Pillars Explorer */}
-      <section className="px-6 md:px-16 lg:px-24 py-20 md:py-28 max-w-7xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-3">
-            Our Architectural Framework
-          </span>
-          <h2 className="font-headline text-3xl md:text-5xl font-black text-primary tracking-tight mb-5">
-            The Six Pillars of Sustainable Execution
-          </h2>
-          <p className="font-body text-base text-on-surface-variant leading-relaxed">
-            Sustainability cannot be an afterthought. It is engineered directly into our fabric selection, factory audits, dyeing methods, and post-consumer product planning.
-          </p>
+      {/* Visual Divider: Section 01 */}
+      <SectionDivider 
+        number="01 // FRAMEWORK" 
+        title="Six Sustainability Pillars" 
+        icon={Layers} 
+        tag="Auto-Cycling Explorer" 
+      />
+
+      {/* 2. Interactive Pillars Explorer (With Automatic Loop) */}
+      <section id="six-pillars" className="px-5 sm:px-8 md:px-16 lg:px-24 py-12 md:py-16 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-2">
+              Our Architectural Framework
+            </span>
+            <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tight">
+              The Six Pillars of Sustainable Execution
+            </h2>
+          </div>
+
+          {/* Autoplay Controls & Progress */}
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-outline-variant/30 shadow-sm shrink-0 self-start md:self-auto">
+            <button
+              onClick={() => setIsAutoLoopPaused(!isAutoLoopPaused)}
+              className="p-1.5 rounded-full hover:bg-surface-container text-primary transition-colors cursor-pointer"
+              title={isAutoLoopPaused ? "Resume Auto-loop" : "Pause Auto-loop"}
+            >
+              {isAutoLoopPaused ? <Play className="w-3.5 h-3.5 text-secondary" /> : <Pause className="w-3.5 h-3.5 text-on-surface-variant" />}
+            </button>
+            <span className="font-label text-[11px] uppercase tracking-wider text-on-surface-variant font-bold">
+              {isAutoLoopPaused ? 'Paused' : 'Auto-Looping'} ({activePillar + 1}/6)
+            </span>
+            <div className="flex items-center gap-1.5 border-l border-outline-variant/30 pl-3">
+              <button 
+                onClick={handlePrevPillar}
+                className="p-1 hover:text-secondary text-primary transition-colors cursor-pointer"
+                aria-label="Previous Pillar"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={handleNextPillar}
+                className="p-1 hover:text-secondary text-primary transition-colors cursor-pointer"
+                aria-label="Next Pillar"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Pillar Selection Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
+        {/* Pillar Selection Tabs (Scrollable on mobile, grid on desktop) */}
+        <div className="flex lg:grid lg:grid-cols-6 gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar pb-3 mb-8 snap-x">
           {pillars.map((pillar, idx) => {
             const Icon = pillar.icon;
             const isActive = activePillar === idx;
             return (
               <button
                 key={pillar.id}
-                onClick={() => setActivePillar(idx)}
-                className={`flex flex-col items-center text-center p-5 rounded-xl border transition-all cursor-pointer ${
+                onClick={() => {
+                  setActivePillar(idx);
+                  setIsAutoLoopPaused(true);
+                }}
+                className={`relative flex-shrink-0 w-44 sm:w-52 lg:w-auto snap-start flex flex-col items-center text-center p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer overflow-hidden ${
                   isActive
-                    ? 'bg-primary text-white border-primary shadow-lg scale-102'
+                    ? 'bg-primary text-white border-primary shadow-lg'
                     : 'bg-white/70 hover:bg-white text-on-surface-variant border-outline-variant/20 hover:border-secondary/40'
                 }`}
               >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors ${
+                {/* Active Progress Bar (shows 5.5s duration) */}
+                {isActive && !isAutoLoopPaused && (
+                  <motion.div
+                    key={`progress-${idx}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 5.5, ease: 'linear' }}
+                    className="absolute top-0 left-0 h-1 bg-secondary"
+                  />
+                )}
+
+                <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center mb-2 transition-colors ${
                   isActive ? 'bg-secondary text-white' : 'bg-surface-container text-primary'
                 }`}>
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4" />
                 </div>
-                <span className={`font-label text-xs uppercase tracking-wider font-bold leading-tight ${
+                <span className={`font-label text-[11px] sm:text-xs uppercase tracking-wider font-bold leading-tight ${
                   isActive ? 'text-white' : 'text-primary'
                 }`}>
                   {pillar.title}
                 </span>
-                <span className={`text-[10px] mt-1 line-clamp-1 ${
+                <span className={`text-[9px] sm:text-[10px] mt-0.5 line-clamp-1 ${
                   isActive ? 'text-secondary-fixed-dim' : 'text-on-surface-variant/60'
                 }`}>
                   {pillar.tag}
@@ -355,151 +530,168 @@ const Sustainability = () => {
         </div>
 
         {/* Active Pillar Detail Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activePillar}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="bg-white rounded-2xl border border-outline-variant/20 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12"
-          >
-            {/* Visual Column */}
-            <div className="lg:col-span-5 relative min-h-[320px] lg:min-h-full overflow-hidden">
-              <img
-                src={pillars[activePillar].image}
-                alt={pillars[activePillar].title}
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 text-white">
-                <span className="font-label text-[10px] uppercase tracking-[0.25em] text-secondary font-bold mb-2">
-                  Pillar Focus #{activePillar + 1}
-                </span>
-                <h3 className="font-headline text-2xl md:text-3xl font-bold mb-2">
-                  {pillars[activePillar].title}
-                </h3>
-                <p className="font-body text-xs text-white/80">
-                  {pillars[activePillar].subtitle}
-                </p>
-
-                {/* Impact Badges */}
-                <div className="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-white/20">
-                  {pillars[activePillar].impactStats.map((statItem, sIdx) => (
-                    <div key={sIdx}>
-                      <span className="font-headline text-xl md:text-2xl font-black text-secondary block">
-                        {statItem.stat}
-                      </span>
-                      <span className="font-label text-[10px] uppercase tracking-wider text-white/70">
-                        {statItem.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Information Column */}
-            <div className="lg:col-span-7 p-8 md:p-12 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 rounded bg-secondary/10 text-secondary font-label text-[10px] uppercase tracking-widest font-bold">
-                    {pillars[activePillar].tag}
+        <div 
+          onMouseEnter={() => setIsAutoLoopPaused(true)}
+          onMouseLeave={() => setIsAutoLoopPaused(false)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activePillar}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-2xl border border-outline-variant/20 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12"
+            >
+              {/* Visual Column */}
+              <div className="lg:col-span-5 relative min-h-[260px] sm:min-h-[320px] lg:min-h-full overflow-hidden">
+                <motion.img
+                  key={pillars[activePillar].image}
+                  initial={{ scale: 1.05 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.7 }}
+                  src={pillars[activePillar].image}
+                  alt={pillars[activePillar].title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white">
+                  <span className="font-label text-[10px] uppercase tracking-[0.25em] text-secondary font-bold mb-1.5">
+                    Pillar #{activePillar + 1} Focus
                   </span>
-                  <span className="text-xs text-on-surface-variant/60 font-label">
-                    Audit Standard: Verified
-                  </span>
-                </div>
+                  <h3 className="font-headline text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+                    {pillars[activePillar].title}
+                  </h3>
+                  <p className="font-body text-xs text-white/80">
+                    {pillars[activePillar].subtitle}
+                  </p>
 
-                <h4 className="font-headline text-2xl md:text-3xl font-black text-primary mb-4">
-                  {pillars[activePillar].subtitle}
-                </h4>
-
-                <p className="font-body text-base text-on-surface-variant leading-relaxed mb-8">
-                  {pillars[activePillar].desc}
-                </p>
-
-                <h5 className="font-label text-xs uppercase tracking-[0.2em] text-primary font-bold mb-4 flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-secondary" />
-                  Key Operational Directives:
-                </h5>
-
-                <div className="space-y-3.5 mb-8">
-                  {pillars[activePillar].points.map((pt, pIdx) => (
-                    <div key={pIdx} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-secondary/15 flex items-center justify-center shrink-0 mt-0.5 text-secondary">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
+                  {/* Impact Badges */}
+                  <div className="grid grid-cols-2 gap-3 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/20">
+                    {pillars[activePillar].impactStats.map((statItem, sIdx) => (
+                      <div key={sIdx}>
+                        <span className="font-headline text-xl sm:text-2xl font-black text-secondary block">
+                          {statItem.stat}
+                        </span>
+                        <span className="font-label text-[9px] sm:text-[10px] uppercase tracking-wider text-white/70">
+                          {statItem.label}
+                        </span>
                       </div>
-                      <span className="font-body text-sm text-on-surface leading-normal">
-                        {pt}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-outline-variant/15 flex flex-wrap items-center justify-between gap-4">
-                <span className="font-label text-xs text-on-surface-variant/70">
-                  Ready to specify this in your tech packs?
-                </span>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-wider text-secondary font-bold hover:text-primary transition-colors group"
-                >
-                  Consult Our Sourcing Team
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+              {/* Information Column */}
+              <div className="lg:col-span-7 p-6 sm:p-8 md:p-12 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="px-3 py-1 rounded bg-secondary/10 text-secondary font-label text-[10px] uppercase tracking-widest font-bold">
+                      {pillars[activePillar].tag}
+                    </span>
+                    <span className="text-xs text-on-surface-variant/60 font-label">
+                      Verified Standard
+                    </span>
+                  </div>
+
+                  <h4 className="font-headline text-xl sm:text-2xl md:text-3xl font-black text-primary mb-3">
+                    {pillars[activePillar].subtitle}
+                  </h4>
+
+                  <p className="font-body text-sm sm:text-base text-on-surface-variant leading-relaxed mb-6 sm:mb-8">
+                    {pillars[activePillar].desc}
+                  </p>
+
+                  <h5 className="font-label text-[11px] sm:text-xs uppercase tracking-[0.2em] text-primary font-bold mb-3 sm:mb-4 flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-secondary" />
+                    Key Operational Directives:
+                  </h5>
+
+                  <div className="space-y-3 mb-6 sm:mb-8">
+                    {pillars[activePillar].points.map((pt, pIdx) => (
+                      <div key={pIdx} className="flex items-start gap-3">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-secondary/15 flex items-center justify-center shrink-0 mt-0.5 text-secondary">
+                          <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                        </div>
+                        <span className="font-body text-xs sm:text-sm text-on-surface leading-normal">
+                          {pt}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-5 border-t border-outline-variant/15 flex flex-wrap items-center justify-between gap-4">
+                  <span className="font-label text-xs text-on-surface-variant/70">
+                    Ready to specify this in your tech packs?
+                  </span>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 font-label text-xs uppercase tracking-wider text-secondary font-bold hover:text-primary transition-colors group"
+                  >
+                    Consult Our Sourcing Team
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </section>
 
+      {/* Visual Divider: Section 02 */}
+      <SectionDivider 
+        number="02 // ACCREDITATIONS" 
+        title="Global Compliance Codes" 
+        icon={ShieldCheck} 
+        tag="Tier-1 Audited" 
+      />
+
       {/* 3. Global Compliance & Certifications Showcase */}
-      <section className="bg-white py-20 md:py-28 px-6 md:px-16 lg:px-24 border-y border-outline-variant/15">
+      <section className="bg-white py-14 sm:py-20 md:py-24 px-5 sm:px-8 md:px-16 lg:px-24 border-y border-outline-variant/15">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
             <div>
-              <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-3">
-                Global Verification
+              <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-2">
+                Independent Verification
               </span>
-              <h2 className="font-headline text-3xl md:text-5xl font-black text-primary tracking-tight">
+              <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tight">
                 Accreditations & Compliance Codes
               </h2>
             </div>
-            <p className="font-body text-base text-on-surface-variant max-w-md">
+            <p className="font-body text-sm sm:text-base text-on-surface-variant max-w-md">
               We operate exclusively within production partner facilities certified by leading international bodies to guarantee flawless workplace and environmental compliance.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {certifications.map((cert, cIdx) => (
               <motion.div
                 key={cIdx}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: cIdx * 0.07 }}
-                className="p-6 rounded-xl border border-outline-variant/20 bg-surface-container-low hover:bg-white hover:shadow-lg hover:border-secondary/30 transition-all group flex flex-col justify-between"
+                transition={{ duration: 0.5, delay: cIdx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                className="p-5 sm:p-6 rounded-xl border border-outline-variant/20 bg-surface-container-low hover:bg-white hover:shadow-lg hover:border-secondary/30 transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3.5">
                     <span 
-                      className="px-3 py-1 rounded text-[11px] font-label font-bold uppercase tracking-wider text-white"
+                      className="px-2.5 py-0.5 rounded text-[10px] font-label font-bold uppercase tracking-wider text-white"
                       style={{ backgroundColor: cert.color }}
                     >
                       {cert.name}
                     </span>
                     <FileCheck className="w-4 h-4 text-outline-variant group-hover:text-secondary transition-colors" />
                   </div>
-                  <h4 className="font-headline text-lg font-bold text-primary mb-2">
+                  <h4 className="font-headline text-base sm:text-lg font-bold text-primary mb-1.5">
                     {cert.subtitle}
                   </h4>
                   <p className="font-body text-xs text-on-surface-variant leading-relaxed">
                     {cert.description}
                   </p>
                 </div>
-                <div className="mt-6 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
-                  <span className="font-label text-[10px] uppercase tracking-widest text-secondary font-bold">
+                <div className="mt-5 pt-3.5 border-t border-outline-variant/10 flex items-center justify-between">
+                  <span className="font-label text-[9px] uppercase tracking-widest text-secondary font-bold">
                     Tier-1 Verification
                   </span>
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
@@ -510,21 +702,72 @@ const Sustainability = () => {
         </div>
       </section>
 
-      {/* 4. Comparative Impact Matrix: Conventional vs ETC Model */}
-      <section className="px-6 md:px-16 lg:px-24 py-20 md:py-28 max-w-7xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-3">
+      {/* Visual Divider: Section 03 */}
+      <SectionDivider 
+        number="03 // METRICS" 
+        title="Impact Comparison Matrix" 
+        icon={TrendingDown} 
+        tag="Resource Efficiency" 
+      />
+
+      {/* 4. Comparative Impact Matrix (Responsive for Mobile Cards + Desktop Table) */}
+      <section className="px-5 sm:px-8 md:px-16 lg:px-24 py-12 md:py-18 max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-2">
             Tangible Impact Metrics
           </span>
-          <h2 className="font-headline text-3xl md:text-5xl font-black text-primary tracking-tight mb-5">
+          <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tight mb-4">
             Conventional Sourcing vs. ETC Eco-Standard
           </h2>
-          <p className="font-body text-base text-on-surface-variant leading-relaxed">
+          <p className="font-body text-sm sm:text-base text-on-surface-variant leading-relaxed">
             See how our proactive environmental investments and technological wash advancements generate measurable resource savings for modern fashion retailers.
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-outline-variant/20 shadow-md overflow-hidden">
+        {/* MOBILE CARDS VIEW (Hidden on Desktop) */}
+        <div className="block lg:hidden space-y-4">
+          {comparisonData.map((row, rIdx) => (
+            <motion.div
+              key={rIdx}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: rIdx * 0.05 }}
+              className="bg-white p-5 rounded-xl border border-outline-variant/20 shadow-sm"
+            >
+              <div className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-outline-variant/15">
+                <span className="font-label text-xs uppercase tracking-wider font-bold text-primary">
+                  {row.parameter}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-label text-[10px] font-bold shrink-0">
+                  <TrendingDown className="w-3 h-3" />
+                  {row.savings}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-surface-container-low p-3 rounded-lg">
+                  <span className="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60 block mb-1">
+                    Conventional
+                  </span>
+                  <span className="font-body text-on-surface-variant leading-tight">
+                    {row.conventional}
+                  </span>
+                </div>
+                <div className="bg-secondary/10 p-3 rounded-lg border border-secondary/20">
+                  <span className="font-label text-[9px] uppercase tracking-widest text-secondary font-bold block mb-1">
+                    ETC Standard
+                  </span>
+                  <span className="font-body font-bold text-primary leading-tight">
+                    {row.etcModel}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* DESKTOP TABLE VIEW (Hidden on Mobile) */}
+        <div className="hidden lg:block bg-white rounded-2xl border border-outline-variant/20 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -561,31 +804,39 @@ const Sustainability = () => {
         </div>
       </section>
 
+      {/* Visual Divider: Section 04 */}
+      <SectionDivider 
+        number="04 // HUMAN DIGNITY" 
+        title="Worker Welfare & Community" 
+        icon={HeartHandshake} 
+        tag="Social Governance" 
+      />
+
       {/* 5. Worker Welfare & Community Spotlight */}
-      <section className="bg-primary text-white py-20 md:py-28 px-6 md:px-16 lg:px-24 relative overflow-hidden">
+      <section className="bg-primary text-white py-16 sm:py-20 md:py-28 px-5 sm:px-8 md:px-16 lg:px-24 relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-secondary/10 blur-3xl pointer-events-none" />
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          <div className="lg:col-span-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-secondary-fixed-dim font-label text-[10px] uppercase tracking-widest font-bold mb-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-center relative z-10">
+          <div className="lg:col-span-6 order-2 lg:order-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-secondary-fixed-dim font-label text-[10px] uppercase tracking-widest font-bold mb-5">
               <HeartHandshake className="w-3.5 h-3.5" />
               Human Dignity In Garmenting
             </div>
 
-            <h2 className="font-headline text-3xl md:text-5xl font-black text-white leading-tight mb-6">
+            <h2 className="font-headline text-2xl sm:text-3xl md:text-5xl font-black text-white leading-tight mb-5">
               Empowering the Artisans & Makers of Bangladesh.
             </h2>
 
-            <p className="font-body text-base text-white/80 leading-relaxed mb-8">
+            <p className="font-body text-sm sm:text-base text-white/80 leading-relaxed mb-6 sm:mb-8">
               At ETC Apparel Ltd, we recognize that true sustainability cannot exist without human equity. We hold our partner factories accountable for fair, on-time wages, progressive workplace gender parity, and health and safety representation on every sewing floor.
             </p>
 
             <div className="space-y-4 mb-8">
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-1 font-bold text-xs">
+              <div className="flex items-start gap-3.5 sm:gap-4">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
                   01
                 </div>
                 <div>
-                  <h4 className="font-label text-sm uppercase tracking-wider font-bold text-white mb-1">
+                  <h4 className="font-label text-xs sm:text-sm uppercase tracking-wider font-bold text-white mb-1">
                     Continuous Health & Safety Oversight
                   </h4>
                   <p className="font-body text-xs text-white/70 leading-relaxed">
@@ -594,12 +845,12 @@ const Sustainability = () => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-1 font-bold text-xs">
+              <div className="flex items-start gap-3.5 sm:gap-4">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
                   02
                 </div>
                 <div>
-                  <h4 className="font-label text-sm uppercase tracking-wider font-bold text-white mb-1">
+                  <h4 className="font-label text-xs sm:text-sm uppercase tracking-wider font-bold text-white mb-1">
                     Leadership & Technical Career Paths
                   </h4>
                   <p className="font-body text-xs text-white/70 leading-relaxed">
@@ -608,12 +859,12 @@ const Sustainability = () => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-1 font-bold text-xs">
+              <div className="flex items-start gap-3.5 sm:gap-4">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
                   03
                 </div>
                 <div>
-                  <h4 className="font-label text-sm uppercase tracking-wider font-bold text-white mb-1">
+                  <h4 className="font-label text-xs sm:text-sm uppercase tracking-wider font-bold text-white mb-1">
                     Transparent Grievance Channels
                   </h4>
                   <p className="font-body text-xs text-white/70 leading-relaxed">
@@ -624,18 +875,18 @@ const Sustainability = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-6 relative">
+          <div className="lg:col-span-6 relative order-1 lg:order-2">
             <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
               <img
                 src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?auto=format&fit=crop&q=80&w=900"
                 alt="Worker Empowerment & Ethical Garment Assembly"
-                className="w-full h-[450px] object-cover"
+                className="w-full h-64 sm:h-80 md:h-[450px] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8">
-                <blockquote className="font-headline text-lg italic text-white/90 mb-2">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6 sm:p-8">
+                <blockquote className="font-headline text-sm sm:text-base md:text-lg italic text-white/90 mb-2">
                   "Sustainable trade is not an aspiration; it is the fundamental moral duty of modern supply chain stewards."
                 </blockquote>
-                <span className="font-label text-[11px] uppercase tracking-widest text-secondary font-bold">
+                <span className="font-label text-[10px] sm:text-[11px] uppercase tracking-widest text-secondary font-bold">
                   ETC Apparel Ltd Board of Directors
                 </span>
               </div>
@@ -644,30 +895,38 @@ const Sustainability = () => {
         </div>
       </section>
 
+      {/* Visual Divider: Section 05 */}
+      <SectionDivider 
+        number="05 // NEXT STEPS" 
+        title="Sourcing Engagement" 
+        icon={ArrowRight} 
+        tag="UK-BD Network" 
+      />
+
       {/* 6. Call to Action */}
-      <section className="px-6 md:px-16 lg:px-24 py-20 max-w-7xl mx-auto text-center">
-        <div className="bg-surface-container-low p-10 md:p-16 rounded-3xl border border-outline-variant/20 shadow-xl max-w-4xl mx-auto">
-          <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-4">
+      <section className="px-5 sm:px-8 md:px-16 lg:px-24 py-16 md:py-20 max-w-7xl mx-auto text-center">
+        <div className="bg-surface-container-low p-6 sm:p-10 md:p-16 rounded-2xl sm:rounded-3xl border border-outline-variant/20 shadow-xl max-w-4xl mx-auto">
+          <span className="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold block mb-3 sm:mb-4">
             Start Sourcing Responsibly
           </span>
-          <h2 className="font-headline text-3xl md:text-5xl font-black text-primary tracking-tight mb-6">
+          <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tight mb-4 sm:mb-6">
             Ready to Build a Clean, Compliant Supply Chain?
           </h2>
-          <p className="font-body text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="font-body text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8">
             Whether you require GOTS-certified organic cotton basics, ozone-washed denim, or certified BSCI manufacturing lines, our London and Dhaka teams are ready to support your next collection cycle.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3.5">
             <Link
               to="/contact"
-              className="editorial-gradient text-on-primary px-8 py-4 rounded font-label text-xs uppercase tracking-[0.2em] font-bold shadow-lg hover:opacity-90 transition-all inline-flex items-center gap-2"
+              className="editorial-gradient text-on-primary px-7 py-3.5 sm:px-8 sm:py-4 rounded font-label text-xs uppercase tracking-[0.2em] font-bold shadow-lg hover:opacity-90 transition-all inline-flex items-center gap-2"
             >
               Initiate Sourcing Inquiry
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/products"
-              className="bg-white border border-outline-variant text-primary px-8 py-4 rounded font-label text-xs uppercase tracking-[0.2em] font-bold shadow-sm hover:bg-surface-container transition-all"
+              className="bg-white border border-outline-variant text-primary px-7 py-3.5 sm:px-8 sm:py-4 rounded font-label text-xs uppercase tracking-[0.2em] font-bold shadow-sm hover:bg-surface-container transition-all"
             >
               Explore Products
             </Link>
